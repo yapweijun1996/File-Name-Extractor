@@ -1,122 +1,176 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>File Name Extractor</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 600px;
-            margin: auto;
-            background: #fff;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        h1 {
-            text-align: center;
-        }
-
-        textarea {
-            width: 100%;
-            height: 150px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            margin-bottom: 10px;
-            resize: none;
-        }
-
-        button {
-            width: 100%;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            background-color: #28a745;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #218838;
-        }
-
-        .output {
-            margin-top: 20px;
-            cursor: pointer;
-        }
-
-        .toast {
-            display: none;
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background-color: #28a745;
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-            z-index: 1000;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>File Name Extractor</title>
+  <!-- SEO Optimization Meta Tags -->
+  <meta name="description" content="Extract file names from file paths with ease. Copy file names to clipboard effortlessly!">
+  <meta name="keywords" content="File Name Extractor, file names, file paths, JavaScript, HTML, Clipboard">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://yapweijun1996.github.io/filename-extractor">
+  <!-- Open Graph Meta Tags -->
+  <meta property="og:title" content="File Name Extractor">
+  <meta property="og:description" content="Extract file names quickly from your file paths and copy them to your clipboard effortlessly using our tool.">
+  <meta property="og:image" content="https://yapweijun1996.github.io/og-image.jpg">
+  <meta property="og:url" content="https://yapweijun1996.github.io/filename-extractor">
+  <meta property="og:type" content="website">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      text-align: center;
+    }
+    textarea {
+      width: 100%;
+      height: 150px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      margin-bottom: 10px;
+      resize: none;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      background-color: #28a745;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #218838;
+    }
+    .output {
+      margin-top: 20px;
+      cursor: pointer;
+    }
+    .toast {
+      display: none;
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background-color: #28a745;
+      color: white;
+      padding: 10px;
+      border-radius: 5px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+    }
+    footer {
+      text-align: center;
+      padding: 15px;
+      margin-top: 30px;
+      color: #666;
+      font-size: 14px;
+      border-top: 1px solid #ddd;
+    }
+    footer a {
+      font-weight: 600;
+      text-decoration: underline;
+      color: #333;
+    }
+    footer a:hover {
+      color: #28a745;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>File Name Extractor</h1>
-        <textarea id="filePaths" placeholder="Paste file paths here..."></textarea>
-        <button id="extractBtn">Extract File Names</button>
-        <div class="output" id="result">
-            <h2>File Names:</h2>
-            <div id="fileNamesDisplay"></div>
-        </div>
+  <div class="container">
+    <h1>File Name Extractor</h1>
+    <textarea id="filePaths" placeholder="Paste file paths here...">"C:\Users\Downloads\New Text Document - Copy (3).txt"
+"C:\Users\Downloads\New Text Document - Copy (4).txt"
+"C:\Users\Downloads\New Text Document.txt"
+"C:\Users\Downloads\New Text Document - Copy.txt"
+"C:\Users\Downloads\New Text Document - Copy (2).txt"
+	</textarea>
+    <button id="extractBtn">Extract File Names</button>
+    <div class="output" id="result">
+      <h2>File Names:</h2>
+      <div id="fileNamesDisplay"></div>
     </div>
-    <div id="toast" class="toast">Copied to clipboard!</div>
+  </div>
+  <div id="toast" class="toast">Copied to clipboard!</div>
+  
+  <footer>
+    <p>
+      By <a href="https://github.com/yapweijun1996" target="_blank">yapweijun1996</a>
+      <span class="at_year"></span>
+    </p>
     <script>
-        document.getElementById('extractBtn').addEventListener('click', function() {
-            const textArea = document.getElementById('filePaths').value;
-            const fileNames = extractFileNames(textArea);
-            displayFileNames(fileNames);
-        });
-
-        function extractFileNames(text) {
-            const lines = text.split('\n');
-            const names = lines.map(line => {
-                const parts = line.split('\\');
-                const fileName = parts[parts.length - 1].trim().replace(/['"]+$/, '');
-                return fileName;
-            });
-            return names.filter(name => name).join(', '); // Combine names into a single string
-        }
-
-        function displayFileNames(fileNames) {
-            const fileNamesDisplay = document.getElementById('fileNamesDisplay');
-            fileNamesDisplay.innerText = fileNames; // Display the combined file names
-            fileNamesDisplay.onclick = () => copyToClipboard(fileNames); // Set click event to copy
-        }
-
-        function copyToClipboard(text) {
-            navigator.clipboard.writeText(text).then(() => {
-                showToast();
-            }).catch(err => {
-                console.error('Could not copy text: ', err);
-            });
-        }
-
-        function showToast() {
-            const toast = document.getElementById('toast');
-            toast.style.display = 'block';
-            setTimeout(() => {
-                toast.style.display = 'none';
-            }, 2000);
-        }
+      document.querySelector('.at_year').textContent = "@ " + new Date().getFullYear();
     </script>
+  </footer>
+  
+  <script>
+    document.getElementById('extractBtn').addEventListener('click', function() {
+      const textArea = document.getElementById('filePaths').value;
+      const fileNames = extractFileNames(textArea);
+      displayFileNames(fileNames);
+    });
+
+    function extractFileNames(text) {
+      const lines = text.split('\n');
+      const names = lines.map(line => {
+        const parts = line.split('\\');
+        const fileName = parts[parts.length - 1].trim().replace(/['"]+$/, '');
+        return fileName;
+      });
+      return names.filter(name => name).join(', '); // Combine names into a single string
+    }
+
+    function displayFileNames(fileNames) {
+      const fileNamesDisplay = document.getElementById('fileNamesDisplay');
+      fileNamesDisplay.innerText = fileNames; // Display the combined file names
+      
+      // Remove previous copy button if exists
+      let existingCopyButton = document.getElementById('copyButton');
+      if (existingCopyButton) {
+        existingCopyButton.remove();
+      }
+      
+      // Add new copy button if file names exist
+      if (fileNames && fileNames.trim().length > 0) {
+        const copyButton = document.createElement('button');
+        copyButton.id = "copyButton";
+        copyButton.innerText = "Copy";
+        copyButton.style.marginTop = "10px";
+        copyButton.addEventListener('click', function() {
+          copyToClipboard(fileNames);
+        });
+        fileNamesDisplay.parentNode.appendChild(copyButton);
+      }
+    }
+
+    function copyToClipboard(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        showToast();
+      }).catch(err => {
+        console.error('Could not copy text: ', err);
+      });
+    }
+
+    function showToast() {
+      const toast = document.getElementById('toast');
+      toast.style.display = 'block';
+      setTimeout(() => {
+        toast.style.display = 'none';
+      }, 2000);
+    }
+  </script>
 </body>
 </html>
